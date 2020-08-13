@@ -1,0 +1,3 @@
+[submodule "parsley-core"]
+	path = parsley-core
+	url = https://github.com/helloalgo/parsley-core
