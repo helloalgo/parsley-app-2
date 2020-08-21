@@ -15,7 +15,7 @@ phases:
       docker: 18
     commands:
       # CodeBuild doesn't provide the .git directory; we can't use submodules
-      - git clone https://github.com/helloalgo/parsley-core core
+      - git clone https://github.com/helloalgo/parsley-core 
   pre_build:
     commands:
       - REPO=959542797839.dkr.ecr.ap-northeast-2.amazonaws.com/parsley-v2-app
