@@ -1,0 +1,39 @@
+version: 0.2
+
+run-as: root
+
+env:
+  git-credential-helper: yes
+
+proxy:
+  upload-artifacts: yes
+  logs: yes
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    commands:
+      # CodeBuild doesn't provide the .git directory; we can't use submodules
+      - git clone https://github.com/helloalgo/parsley-core core
+  pre_build:
+    commands:
+      - REPO=959542797839.dkr.ecr.ap-northeast-2.amazonaws.com/parsley-v2-app
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=release
+      - docker pull $REPO:latest || true
+  build:
+    commands:
+      - docker build -t parsley-v2-app:latest -f build/Dockerfile .
+      - docker tag parsley-v2-app:latest $REPO:latest
+      - docker tag parsley-v2-app:latest $REPO:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPO:latest 
+      - docker push $REPO:$IMAGE_TAG
