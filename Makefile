@@ -8,3 +8,6 @@ core_build:
 
 build: core_build
 	go build -o bin/main main.go
+
+docker:
+	docker build -f build/Dockerfile -t jungnoh/parsley-app:latest .
