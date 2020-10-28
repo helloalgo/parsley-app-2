@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"os"
 	"os/exec"
 	"path"
 	"syscall"
@@ -16,7 +15,7 @@ func signalWatcher(kill <-chan bool, stop <-chan bool, cmd *exec.Cmd) {
 	for {
 		select {
 		case <-kill:
-			cmd.Process.Signal(os.Kill)
+			cmd.Process.Signal(syscall.SIGTERM)
 		case <-stop:
 			break
 		}

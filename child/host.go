@@ -80,7 +80,7 @@ func (host *Host) Clean() (err error) {
 	return
 }
 
-// Kill 메소드는 자식 프로세스가 실행중일 경우 SIGKILL 시그너을 보냅니다.
+// Kill 메소드는 자식 프로세스가 실행중일 경우 SIGTERM 시그널을 보냅니다.
 func (host *Host) Kill(reason int) error {
 	log.Printf("Host Kill requested: reason %d", reason)
 	if host.status != HostRunning {
