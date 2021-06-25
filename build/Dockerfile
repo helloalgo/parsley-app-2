@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 LABEL maintainer="jungnoh.dev@gmail.com"
 
-RUN apt-get update -y && apt-get install -y make
+RUN apt-get update -y && apt-get install -y make openjdk-8-jdk
 ADD Makefile /src/Makefile
 WORKDIR /src
 RUN make ubuntu-deps
