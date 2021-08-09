@@ -14,8 +14,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	var opts []grpc.ServerOption
-	grpcServer := grpc.NewServer(opts...)
+	grpcServer := grpc.NewServer(
+		grpc.MaxRecvMsgSize(104857600),
+		grpc.MaxSendMsgSize(104857600),
+	)
 	srv, err := server.Create()
 	if err != nil {
 		log.Fatalln(err)
