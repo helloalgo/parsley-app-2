@@ -32,6 +32,7 @@ type Host struct {
 	workDir    string
 	args       ExecutionArgs
 	limits     ExecutionLimit
+	inputFile  string
 	status     string
 	killChan   chan bool
 	killReason int
@@ -61,6 +62,7 @@ func (host *Host) setupSession() (err error) {
 		Seccomp:      "basic",
 	}
 	host.status = HostReady
+	host.inputFile = ""
 	return
 }
 
@@ -133,6 +135,18 @@ func (host *Host) SetLimits(limit ExecutionLimit) (err error) {
 	return
 }
 
+// SetLimits sets the execution limits for the current host.
+func (host *Host) SetInputFile(inputFile string) (err error) {
+	host.Lock()
+	defer host.Unlock()
+	if host.status != HostReady {
+		err = errStateInvalid
+	} else {
+		host.inputFile = inputFile
+	}
+	return
+}
+
 // GetArgs is a getter.
 func (host Host) GetArgs() ExecutionArgs {
 	return host.args
@@ -173,7 +187,7 @@ func (host *Host) Start(policy ExecutionPolicy, report chan ExecutionResult) {
 	host.status = HostRunning
 	host.killChan = make(chan bool, 100)
 	host.Unlock()
-	result := runThroughContainer(policy, host.limits, host.workDir, host.killChan, host.args)
+	result := runThroughContainer(policy, host.limits, host.workDir, host.inputFile, host.killChan, host.args)
 
 	// Check for killReason if child is terminated
 	if result.HostHadError && result.HostError.Error() == "TERMINATED" && host.killReason != 0 {
