@@ -26,6 +26,7 @@ func runThroughContainer(
 	policy ExecutionPolicy,
 	limit ExecutionLimit,
 	workDir string,
+	inputFile string,
 	killChan <-chan bool,
 	args ExecutionArgs,
 ) (runResult ExecutionResult) {
@@ -37,6 +38,7 @@ func runThroughContainer(
 		"-s", fmt.Sprint(limit.Memory),
 		"-m", fmt.Sprint(limit.Memory),
 		"-w", fmt.Sprint(limit.FileWrite),
+		"-I", inputFile,
 		"--seccomp", limit.Seccomp,
 		"--", args.Command,
 	}
