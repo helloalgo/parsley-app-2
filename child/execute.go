@@ -26,6 +26,7 @@ func runThroughContainer(
 	policy ExecutionPolicy,
 	limit ExecutionLimit,
 	workDir string,
+	inputFile string,
 	killChan <-chan bool,
 	args ExecutionArgs,
 ) (runResult ExecutionResult) {
@@ -37,9 +38,16 @@ func runThroughContainer(
 		"-s", fmt.Sprint(limit.Memory),
 		"-m", fmt.Sprint(limit.Memory),
 		"-w", fmt.Sprint(limit.FileWrite),
+	}
+
+	if inputFile != "" {
+		log.Printf("Input file: %s", inputFile)
+		wrappedArgs = append(wrappedArgs, "-I", inputFile)
+	}
+	wrappedArgs = append(wrappedArgs,
 		"--seccomp", limit.Seccomp,
 		"--", args.Command,
-	}
+	)
 	wrappedArgs = append(wrappedArgs, args.Args...)
 
 	cmd := exec.Command(wrappedCommand, wrappedArgs...)

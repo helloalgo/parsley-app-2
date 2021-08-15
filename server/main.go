@@ -61,6 +61,13 @@ func (s *ExecutionContainerSrv) SetRunConfig(ctx context.Context, req *pb.RunOpt
 			Message: err.Error(),
 		}, nil
 	}
+	err = s.container.SetInputFile(req.InputFile)
+	if err != nil {
+		return &pb.SettingChangeResult{
+			Success: false,
+			Message: err.Error(),
+		}, nil
+	}
 	return &pb.SettingChangeResult{
 		Success: true,
 	}, nil
