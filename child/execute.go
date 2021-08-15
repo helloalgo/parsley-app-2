@@ -38,10 +38,16 @@ func runThroughContainer(
 		"-s", fmt.Sprint(limit.Memory),
 		"-m", fmt.Sprint(limit.Memory),
 		"-w", fmt.Sprint(limit.FileWrite),
-		"-I", inputFile,
+	}
+
+	if inputFile != "" {
+		log.Printf("Input file: %s", inputFile)
+		wrappedArgs = append(wrappedArgs, "-I", inputFile)
+	}
+	wrappedArgs = append(wrappedArgs,
 		"--seccomp", limit.Seccomp,
 		"--", args.Command,
-	}
+	)
 	wrappedArgs = append(wrappedArgs, args.Args...)
 
 	cmd := exec.Command(wrappedCommand, wrappedArgs...)
