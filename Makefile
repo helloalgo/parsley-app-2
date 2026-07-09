@@ -3,7 +3,7 @@ ubuntu-deps:
 	add-apt-repository ppa:longsleep/golang-backports -y
 	add-apt-repository ppa:ubuntu-toolchain-r/test -y
 	apt-get update
-	apt-get install -y gcc-10 g++-10
+	apt-get install -y gcc-11 g++-11
 	apt-get -y install golang-1.14-go
 
 core_build:
